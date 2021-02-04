@@ -25,7 +25,7 @@ public class ApiTest {
     private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 
     @Test
-    public void validateEmails() {
+    public void testValidateEmails() {
         RestAssured.defaultParser = Parser.JSON;
 
         Map<String, Object> acceptHeader = new HashMap<>();
@@ -34,7 +34,7 @@ public class ApiTest {
         Response userResponse = given().headers(acceptHeader).when().get(GET_USER)
             .then().statusCode(200).contentType(ContentType.JSON).extract().response();
 
-        String id = userResponse.jsonPath().getString("id").replaceAll("\\[", "").replaceAll("]", "");
+        String id = userResponse.jsonPath().getString("id").replaceAll("\\[", "").replaceAll("\\]", "");
         System.out.println(id);
 
         Response postsResponse = given().headers(acceptHeader).when().get(String.format(GET_POSTS, id))
