@@ -17,9 +17,6 @@ jobs:
       - store_artifacts:
           path: target/jacoco-reports
           destination: Coverage report
-      - store_artifacts:
-          path: ~/test-results/junit
-          destination: JUnit report
       - store_test_results:
           path: ~/test-results
     docker:
