@@ -8,10 +8,16 @@ jobs:
     steps:
       - checkout
       - run: mvn test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
       - store_artifacts:
-          path: target
+          path: target/jacoco-reports, ~/test-results/junit
       - store_test_results:
-          path: target/surefire-reports/*.xml
+          path: ~/test-results
     docker:
       - image: circleci/openjdk:8u171-jdk
 
