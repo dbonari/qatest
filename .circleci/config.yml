@@ -15,7 +15,11 @@ jobs:
             find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
           when: always
       - store_artifacts:
-          path: target/jacoco-reports, ~/test-results/junit
+          path: target/jacoco-reports
+          destination: Coverage report
+      - store_artifacts:
+          path: ~/test-results/junit
+          destination: JUnit report
       - store_test_results:
           path: ~/test-results
     docker:
