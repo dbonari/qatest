@@ -1,9 +1,28 @@
 version: 2.1
 
 orbs:
-  maven: circleci/maven@0.0.12
+  maven: circleci/maven@1.1.0
+
+jobs:
+  test:
+    steps:
+      - checkout
+      - run: mvn test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_artifacts:
+          path: target/jacoco-reports
+          destination: Coverage report
+      - store_test_results:
+          path: ~/test-results
+    docker:
+      - image: circleci/openjdk:8u171-jdk
 
 workflows:
   maven_test:
     jobs:
-      - maven/test # checkout, build, test, and upload test results
+      - test
