@@ -2,7 +2,9 @@ package com.dbonari.qatest.rest.actions;
 
 import com.dbonari.qatest.rest.utils.RestAssuredUtils;
 import com.github.dbonari.qatest.PropertiesReader;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 
 import java.util.HashMap;
@@ -18,6 +20,10 @@ public class RestActions {
 
     private Map<String, Object> acceptHeaders = new HashMap<String, Object>() {{put("Accept", ContentType.JSON);}};
     private PropertiesReader propertiesReader = new PropertiesReader();
+
+    static {
+        RestAssured.defaultParser = Parser.JSON;
+    }
 
     public Response getUserByUsername(String username) {
         String url = format(propertiesReader.getProperty(GET_USER), username);
