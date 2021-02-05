@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 
 orbs:
   maven: circleci/maven@1.1.0
@@ -7,19 +7,13 @@ jobs:
   test:
     steps:
       - checkout
-      - run: mvn clean site
-      - store_test_results:
-          path: /target/surefire-reports/*.xml
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - target/site
-    executor:
+      - run: mvn test
+      - store_artifacts:
+          path: target
     docker:
       - image: circleci/openjdk:8u171-jdk
 
 workflows:
   maven_test:
     jobs:
-      - maven/test:
-            test_results_path: /target/site/surefire-report.html
+      - maven/test
