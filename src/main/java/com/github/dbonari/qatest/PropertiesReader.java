@@ -32,6 +32,8 @@ public class PropertiesReader {
     }
 
     public enum Property {
+        LOG_ALL("log.all"),
+        BASE_URL("url.base"),
         GET_USER("url.get.user"),
         GET_POSTS("url.get.posts"),
         GET_COMMENTS("url.get.comments"),
