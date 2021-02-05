@@ -6,7 +6,10 @@ import com.dbonari.qatest.rest.utils.ValidationUtils;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -15,22 +18,25 @@ import java.util.List;
 
 public class ApiTest {
 
+    private static final Logger log = LogManager.getLogger(ApiTest.class);
     private final RestActions restActions = new RestActions();
     private final JsonActions jsonActions = new JsonActions();
     private List<String> emailsList = new ArrayList<>();
 
+    @BeforeAll
+    static void setup() {
+        RestAssured.defaultParser = Parser.JSON;
+    }
+
     @Test
     public void testValidateEmails() {
-        RestAssured.defaultParser = Parser.JSON;
-
         Response userResponse = restActions.getUserByUsername("Delphine");
         String userId = jsonActions.getUserId(userResponse);
-        System.out.printf("userId=%s%n", userId);
-        System.out.println();
+        log.debug("userId={}", userId);
 
         Response postsResponse = restActions.getPostsByUserId(userId);
         List<Integer> postIds = jsonActions.getPostIds(postsResponse);
-        System.out.printf("postIds=%s%n", postIds);
+        log.debug("postIds={}", postIds);
 
         for (Integer postId : postIds) {
             Response commentsResponse = restActions.getCommentsByPostId(postId);
@@ -42,7 +48,7 @@ public class ApiTest {
         for (String email : emailsList) {
             boolean isValid = ValidationUtils.isValidEmail(email);
             executables.add(() -> Assertions.assertTrue(isValid, email + " is not valid"));
-            System.out.printf("%s: %s%n", email, isValid ? "is valid" : "is invalid");
+            log.debug("{}: {}", email, isValid ? "is valid" : "is invalid");
         }
 
         Assertions.assertAll(executables.stream());
