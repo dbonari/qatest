@@ -12,8 +12,10 @@ public class JsonActions {
         String id = userResponse.jsonPath().getString("id");
         Pattern pattern = Pattern.compile("\\d");
         Matcher matcher = pattern.matcher(id);
-        matcher.find();
-        return matcher.group();
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
     }
 
     public List<Integer> getPostIds(Response postsResponse) {
